@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\models\logdata\log;
 use App\User;
 
 class HomeController extends Controller
@@ -25,12 +26,13 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $log = log::saveData(3);
         $id = Auth::id();
         $userObj = User::find($id);
         if($userObj->email_verified_at == null){
-            $message = 'Please verify your email first';
+            $message = $userObj->name . '! Please verify your email first';
             return view('home', compact('message'));
         }
-        return view('home');
+        return view('home', compact('userObj'));
     }
 }
