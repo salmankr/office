@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
 	if(Illuminate\Support\Facades\Auth::check()){
-		$log = App\models\logdata\log::saveData(7);	
+		$log = App\models\logdata\log::saveData(7);
 	}
     return view('welcome');
 });
@@ -40,3 +40,17 @@ Route::get('/localization/{locale}', 'userDataController@localization')->name('l
 Route::get('browser-name', function(){
 	return App\Helpers\getBrowser::browsername();
 });
+
+
+Route::get('mail-test', function(){
+	$obj = [
+		'from' => 'ahmad@gmail.com',
+		'body' => 'hello, just test email',
+	];
+	App\Jobs\emailSendingProcess::dispatch($obj);
+});
+
+
+Route::get('send-message', 'HomeController@sendMessage')->middleware('auth');
+
+Route::post('/two-factor-verification', 'HomeController@twofaverif')->name('twofa')->middleware('auth');
