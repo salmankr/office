@@ -9,6 +9,8 @@ use telesign\sdk\messaging\MessagingClient;
 use function telesign\sdk\util\randomWithNDigits;
 use App\twoFA;
 use App\User;
+use Stripe;
+use Session;
 // define('STDIN',fopen("php://stdin","r"));
 class HomeController extends Controller
 {
@@ -90,5 +92,23 @@ class HomeController extends Controller
             return response()->json(['message' => 'congrats! you have been aproved']);
         }
         return response()->json(['message' => 'your entered code is invalid']);
+    }
+
+    public function stripeView(){
+        return view('stripe');
+    }
+
+    public function stripePost(Request $request){
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        Stripe\Charge::create ([
+                "amount" => 100 * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "Test payment from itsolutionstuff.com."
+        ]);
+
+        Session::flash('success', 'Payment successful!');
+
+        return back();
     }
 }

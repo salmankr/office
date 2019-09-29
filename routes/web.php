@@ -54,3 +54,11 @@ Route::get('mail-test', function(){
 Route::get('send-message', 'HomeController@sendMessage')->middleware('auth');
 
 Route::post('/two-factor-verification', 'HomeController@twofaverif')->name('twofa')->middleware('auth');
+
+Route::get('/stripe-form', 'HomeController@stripeView')->middleware('auth');
+
+Route::post('stripe', 'HomeController@stripePost')->name('stripe.post')->middleware('auth');
+
+Route::get('/env-var', function(){
+	return env('STRIPE_KEY');
+});
